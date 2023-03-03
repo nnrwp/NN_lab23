@@ -1,9 +1,17 @@
 #include <windows.h>
 
+HWND textfield;
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
-		
+		case WM_CREATE:
+			textfield = CreateWindow("STATIC",
+									"Please input two numbers",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									20, 20, 190, 20,
+									hwnd, NULL, NULL, NULL);
+			break;
+			
 		/* Upon destruction, tell the main thread to stop */
 		case WM_DESTROY: {
 			PostQuitMessage(0);
@@ -41,12 +49,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Caption",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(
+		0,
+		"WindowClass",
+		"My Calculator",
+		WS_VISIBLE|WS_SYSMENU, /* Window ไม่สามารถย่อ ขยาย หรือเปลี่ยนขนาดได้ */
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
-		640, /* width */
-		480, /* height */
-		NULL,NULL,hInstance,NULL);
+		250, /* width */
+		200, /* height */
+		HWND_DESKTOP,
+		NULL,
+		hInstance,
+		NULL);
 
 	if(hwnd == NULL) {
 		MessageBox(NULL, "Window Creation Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);
