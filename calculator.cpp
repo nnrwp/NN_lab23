@@ -1,6 +1,11 @@
 #include <windows.h>
+#include <stdio.h>
+#include <cstdlib>
+#include <iostream>
 
-HWND textfield;
+HWND textfield, input1, input2, button1, button2, button3, button4;
+char szClassName[] = "TextEntry";
+
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
@@ -8,10 +13,77 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			textfield = CreateWindow("STATIC",
 									"Please input two numbers",
 									WS_VISIBLE | WS_CHILD | WS_BORDER,
-									20, 20, 190, 20,
+									30, 20, 190, 20,
 									hwnd, NULL, NULL, NULL);
+
+			input1 = CreateWindow("EDIT",
+									NULL,
+									WS_BORDER | WS_CHILD | WS_VISIBLE,
+									50, 50, 150, 20,
+									hwnd, NULL, NULL, NULL);
+
+			input2 = CreateWindow("EDIT",
+									NULL,
+									WS_BORDER | WS_CHILD | WS_VISIBLE,
+									50, 80, 150, 20,
+									hwnd, NULL, NULL, NULL);
+
+			button1 = CreateWindow("BUTTON",
+									"+",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									70, 110, 20, 20,
+									hwnd, (HMENU) 1, NULL, NULL);
+
+			button2 = CreateWindow("BUTTON",
+									"-",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									100, 110, 20, 20,
+									hwnd, (HMENU) 2, NULL, NULL);
+
+			button3 = CreateWindow("BUTTON",
+									"*",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									130, 110, 20, 20,
+									hwnd, (HMENU) 3, NULL, NULL);
+
+			button4 = CreateWindow("BUTTON",
+									"/",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									160, 110, 20, 20,
+									hwnd, (HMENU) 4, NULL, NULL);
 			break;
-			
+		
+		case WM_COMMAND :
+			char strResult[32];
+			float num1 = atof(input1);
+			float num2 = atof(input2);
+			switch (LOWORD(wParam)){
+				case 1 :
+					sprintf(strResult, "%d", num1 + num2)
+					::MessageBeep(MB_ICONERROR);
+					::MessageBox(hwnd, strResult, "Result", MB_OK);
+					break;
+
+				case 2 :
+					sprintf(strResult, "%d", num1 - num2)
+					::MessageBeep(MB_ICONERROR);
+					::MessageBox(hwnd, strResult, "Result", MB_OK);
+					break;
+
+				case 3 :
+					sprintf(strResult, "%d", num1 * num2)
+					::MessageBeep(MB_ICONERROR);
+					::MessageBox(hwnd, strResult, "Result", MB_OK);
+					break;
+
+				case 4 :
+					sprintf(strResult, "%d", num1 / num2)
+					::MessageBeep(MB_ICONERROR);
+					::MessageBox(hwnd, strResult, "Result", MB_OK);
+					break;
+			}
+			break;
+
 		/* Upon destruction, tell the main thread to stop */
 		case WM_DESTROY: {
 			PostQuitMessage(0);
@@ -39,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+25);
 	wc.lpszClassName = "WindowClass";
 	wc.hIcon	 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm	 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
